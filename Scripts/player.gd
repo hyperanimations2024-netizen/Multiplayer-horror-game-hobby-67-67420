@@ -12,6 +12,8 @@ var run_speed = 7.5
 @onready var player: Node3D = $Head/Player
 @onready var anime_tree: AnimationTree = $Head/Player/AnimationTree
 @onready var skele: Skeleton3D = $Head/Player/Armature/Skeleton3D
+@onready var body: Node3D = $Head/Player/Armature
+
 
 enum {IDLE,JUMP,WALK,RUN}
 var current_anime = IDLE
@@ -24,6 +26,7 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	cam.current = is_multiplayer_authority()
+	
 	
 	
 func _input(event: InputEvent) -> void:
@@ -96,5 +99,9 @@ func animation_handler():
 		JUMP:
 			anime_tree.set("parameters/Movement/transition_request","Jump")
 			
-		
+func hide_body():
+	if get_multiplayer_authority() == name.to_int():
+		body.hide()
+
+	 
 		

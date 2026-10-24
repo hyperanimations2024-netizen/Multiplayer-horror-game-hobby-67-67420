@@ -3,8 +3,6 @@ extends Node3D
 const PLAYER_CONTROLLER = preload("uid://ckyxsmhvx6d4p")
 @onready var host_button: Button = $CanvasLayer/Button
 
-
-
 var players: Array[CharacterBody3D]
 
 func _ready() -> void:
@@ -23,6 +21,7 @@ func spawn_player(peer_id: int) -> void:
 	new_player.name = str(peer_id)
 	add_child(new_player)
 	initialize_player(new_player)
+	
 
 
 func initialize_player(player: CharacterBody3D) -> void:
@@ -30,6 +29,8 @@ func initialize_player(player: CharacterBody3D) -> void:
 	for other in players:
 		player.add_collision_exception_with(other)
 	players.append(player)
+	for obj in players:
+		obj.hide_body()
 
 func _on_button_pressed() -> void:
 	Networking.host_lobby()
@@ -38,3 +39,5 @@ func _on_button_pressed() -> void:
 func _on_multiplayer_spawner_spawned(node: Node) -> void:
 	if node is CharacterBody3D:
 		initialize_player(node)
+	
+		
