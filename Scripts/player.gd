@@ -80,7 +80,9 @@ func _physics_process(delta: float) -> void:
 	
 func looking_animation_handler():
 	var x_value:float = -0.020851 + -cam.rotation.x
+	x_value = clampf(x_value,-0.780025,0.639975)
 	skele.set_bone_pose_rotation(1,Quaternion(x_value ,-0.012075, -0.017899, 0.999549))
+	 
 
 
 func animation_handler():
