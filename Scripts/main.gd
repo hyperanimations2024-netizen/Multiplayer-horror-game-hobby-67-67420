@@ -28,10 +28,10 @@ func initialize_player(player: CharacterBody3D) -> void:
 	player.position = $Spawnpoint.position
 	for other in players:
 		player.add_collision_exception_with(other)
+		if other.get_multiplayer().get_unique_id() == get_tree().get_multiplayer().get_unique_id():
+			other.hide_body()
 	players.append(player)
-	for obj in player:
-		if obj.get_multiplayer().get_unique_id() == get_tree().get_multiplayer().get_unique_id():
-			obj.hide_body()
+
 
 func _on_button_pressed() -> void:
 	Networking.host_lobby()
