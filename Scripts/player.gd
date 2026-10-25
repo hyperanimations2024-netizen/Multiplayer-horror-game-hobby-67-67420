@@ -100,8 +100,7 @@ func animation_handler():
 			anime_tree.set("parameters/Movement/transition_request","Jump")
 			
 func hide_body():
-	if get_multiplayer_authority() == name.to_int():
-		body.hide()
+	body.hide()
 
 	 
 		
