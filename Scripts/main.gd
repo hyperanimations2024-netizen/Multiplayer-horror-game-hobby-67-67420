@@ -21,7 +21,9 @@ func spawn_player(peer_id: int) -> void:
 	new_player.name = str(peer_id)
 	add_child(new_player)
 	initialize_player(new_player)
-	
+	for other in players:
+		if other.get_multiplayer().get_unique_id() == get_tree().get_multiplayer().get_unique_id():
+			other.hide_body()
 
 
 func initialize_player(player: CharacterBody3D) -> void:
