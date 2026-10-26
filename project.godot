@@ -21,6 +21,8 @@ Networking="*uid://tujoikq45u7e"
 
 [display]
 
+window/size/viewport_width=500
+window/size/viewport_height=500
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/vsync/vsync_mode=0

@@ -12,13 +12,15 @@ var run_speed = 7.5
 @onready var player: Node3D = $Head/Player
 @onready var anime_tree: AnimationTree = $Head/Player/AnimationTree
 @onready var skele: Skeleton3D = $Head/Player/Armature/Skeleton3D
-@onready var body: Node3D = $Head/Player/Armature
+@export var body: Node3D 
+
 
 
 enum {IDLE,JUMP,WALK,RUN}
 var current_anime = IDLE
 
 var sens:float = 0.001
+@export var x_value:float
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
@@ -44,8 +46,8 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority():
 		return
-		
-	looking_animation_handler()
+	hiding_other_bodies()
+	looking_animation_handler.rpc()
 	animation_handler()
 	# Add the gravity.
 	if not is_on_floor():
@@ -80,9 +82,9 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 	
-	
+@rpc("any_peer","call_local")
 func looking_animation_handler():
-	var x_value:float = -0.020851 + -cam.rotation.x
+	x_value = -0.020851 + -cam.rotation.x
 	x_value = clampf(x_value,-0.780025,0.639975)
 	skele.set_bone_pose_rotation(1,Quaternion(x_value ,-0.012075, -0.017899, 0.999549))
 	 
@@ -99,8 +101,10 @@ func animation_handler():
 		JUMP:
 			anime_tree.set("parameters/Movement/transition_request","Jump")
 			
-func hide_body():
-	body.hide()
-
+func hiding_other_bodies() -> void:
+	if is_multiplayer_authority():
+		body.hide()
+	else:
+		body.show()
 	 
 		
