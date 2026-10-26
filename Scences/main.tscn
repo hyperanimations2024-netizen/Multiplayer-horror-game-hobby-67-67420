@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://daf2kpcn0d5vq" path="res://Scripts/main.gd" id="1_80y6g"]
 [ext_resource type="Texture2D" uid="uid://6ms8c0um01o2" path="res://resources/floor texture/texture_13.png" id="1_g6820"]
+[ext_resource type="PackedScene" uid="uid://ckyxsmhvx6d4p" path="res://Scences/player.tscn" id="2_7cn2w"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_g6820"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -21,6 +22,7 @@ uv1_scale = Vector3(7.79, 7.79, 7.79)
 
 [node name="Main" type="Node3D" unique_id=1301311077]
 script = ExtResource("1_80y6g")
+NETWORK_PLAYER = ExtResource("2_7cn2w")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1119342951]
 environment = SubResource("Environment_7cn2w")
@@ -36,17 +38,33 @@ material = SubResource("StandardMaterial3D_80y6g")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1434533988]
 
-[node name="Button" type="Button" parent="CanvasLayer" unique_id=1360039913]
-offset_right = 161.0
-offset_bottom = 50.0
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer" unique_id=2089120548]
+offset_right = 1153.0
+offset_bottom = 650.0
+alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Button" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=1360039913]
+layout_mode = 2
 text = "Host"
 
+[node name="Local Host" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=1756007857]
+layout_mode = 2
+text = "Local Host"
+
+[node name="Local Join" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=713898457]
+layout_mode = 2
+text = "Local Join
+"
+
 [node name="Spawnpoint" type="Node3D" parent="." unique_id=771244434]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=751090536]
 _spawnable_scenes = PackedStringArray("uid://ckyxsmhvx6d4p")
 spawn_path = NodePath("..")
 
-[connection signal="pressed" from="CanvasLayer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/Local Host" to="." method="_on_local_host_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/Local Join" to="." method="_on_local_join_pressed"]
 [connection signal="spawned" from="MultiplayerSpawner" to="." method="_on_multiplayer_spawner_spawned"]

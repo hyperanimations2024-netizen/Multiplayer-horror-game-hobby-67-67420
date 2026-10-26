@@ -2,7 +2,10 @@ extends Node
 
 signal host_created()
 
+const IP_ADDRESS:String = "localhost"
+const PORT:int = 6000
 
+var local_peer:ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 
 const LOBBY_TYPE := Steam.LobbyType.LOBBY_TYPE_FRIENDS_ONLY
 const MAX_MEMBERS := 4
@@ -53,3 +56,14 @@ func on_lobby_joined(lobby_id: int, permissions: int, locked: bool, response: in
 func on_join_requested(lobby_id: int, steam_id: int) -> void:
 	# Will cause the "lobby_joined" signal to emit
 	Steam.joinLobby(lobby_id)
+
+func start_local_server() -> void:
+	local_peer.create_server(PORT)
+	multiplayer.multiplayer_peer = local_peer
+	
+	
+func start_local_client() -> void:
+	local_peer.create_client(IP_ADDRESS,PORT)
+	multiplayer.multiplayer_peer = local_peer
+	
+	
