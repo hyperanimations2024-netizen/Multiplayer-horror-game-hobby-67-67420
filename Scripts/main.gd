@@ -1,7 +1,9 @@
 extends Node3D
 
 const PLAYER_CONTROLLER = preload("uid://ckyxsmhvx6d4p")
-@onready var host_button: Button = $CanvasLayer/Button
+@export var NETWORK_PLAYER:PackedScene
+@onready var host_button: Button = $CanvasLayer/VBoxContainer/Button
+@onready var ui: CanvasLayer = $CanvasLayer
 
 var players: Array[CharacterBody3D]
 
@@ -21,19 +23,24 @@ func spawn_player(peer_id: int) -> void:
 	new_player.name = str(peer_id)
 	add_child(new_player)
 	initialize_player(new_player)
-	for other in players:
-		if other.get_multiplayer().get_unique_id() == get_tree().get_multiplayer().get_unique_id():
-			other.hide_body()
+	
 
 
-func initialize_player(player: CharacterBody3D) -> void:
+func spawn_local_player(id:int):
+	var player = NETWORK_PLAYER.instantiate()
+	player.name = str(id)
+	call_deferred("add_child",player)
+	players.append(player)
 	player.position = $Spawnpoint.position
 	for other in players:
 		player.add_collision_exception_with(other)
-		if other.get_multiplayer().get_unique_id() == get_tree().get_multiplayer().get_unique_id():
-			other.hide_body()
-	players.append(player)
+	
 
+func initialize_player(player: CharacterBody3D) -> void:
+	player.position = $Spawnpoint.position
+	players.append(player)
+	for other in players:
+		player.add_collision_exception_with(other)
 
 func _on_button_pressed() -> void:
 	Networking.host_lobby()
@@ -43,4 +50,13 @@ func _on_multiplayer_spawner_spawned(node: Node) -> void:
 	if node is CharacterBody3D:
 		initialize_player(node)
 	
-		
+
+func _on_local_host_pressed() -> void:
+	Networking.start_local_server()
+	multiplayer.peer_connected.connect(spawn_local_player)
+	spawn_local_player(multiplayer.get_unique_id())
+	ui.hide()
+
+func _on_local_join_pressed() -> void:
+	Networking.start_local_client()
+	ui.hide()
